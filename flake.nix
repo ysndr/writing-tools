@@ -28,7 +28,6 @@
             python = python3.withPackages (p: (pythonDefault p) ++ (pythonExtra p));
             pandocPackages = [
               librsvg
-              haskellPackages.pandoc-citeproc
             ];
             buildInputs = [ makeWrapper python ] ++ pandocPackages ++ extraPackages;
 
