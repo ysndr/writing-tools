@@ -36,17 +36,17 @@
             {
               inherit buildInputs;
             } ''
-            for file in ${ lib.concatStringsSep " " filters }
-            do
-              if [[ ! -f "$file" ]] \
-              && [[ ! $(PATH="${lib.makeBinPath buildInputs}" type -P "$file") ]]; \
-              then (printf "File Not Found or not a File %s" "$file"; exit 1) fi
-            done
+              for file in ${ lib.concatStringsSep " " filters }
+              do
+                if [[ ! -f "$file" ]] \
+                && [[ ! $(PATH="${lib.makeBinPath buildInputs}" type -P "$file") ]]; \
+                then (printf "File Not Found or not a File %s" "$file"; exit 1) fi
+              done
 
-            makeWrapper ${pandoc}/bin/pandoc $out/bin/pandoc \
-              ${ lib.concatMapStringsSep " " (filter: "--add-flags \"-F ${filter}\"") filters} \
-              --prefix PATH : "${lib.makeBinPath buildInputs}"
-          '';
+              makeWrapper ${pkgs.pandoc}/bin/pandoc $out/bin/pandoc \
+                ${ lib.concatMapStringsSep " " (filter: "--add-flags \"-F ${filter}\"") filters} \
+                --prefix PATH : "${lib.makeBinPath buildInputs}"
+            '';
 
         latex = pkgs.makeOverridable latexWithExtraPackages { };
         pandoc = pkgs.makeOverridable pandocWithFilters { };
