@@ -1,5 +1,5 @@
 {
-  description = "A basic flake with a shell";
+  description = "Pandoc + LaTeX Writing tools";
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
   inputs.flake-utils.url = "github:numtide/flake-utils";
 
@@ -9,19 +9,19 @@
         pkgs = nixpkgs.legacyPackages.${system};
 
 
-        latexWithExtraPackages = { ... }@extraPackages: pkgs.texlive.combine ({
-          inherit (texlive) scheme-small
+        latexWithExtraPackages = with pkgs; { makeOverridable ? {} }: texlive.combine ({
+          inherit (pkgs.texlive) scheme-small
             collection-langgerman
             collection-latexextra
             collection-mathscience
             quattrocento
             tracklang;
           #isodate substr lipsum nonfloat supertabular;
-        } extraPackages);
+        } // extraPackages);
 
 
 
-        pandocWithFilters =
+        pandocWithFilters = with pkgs;
           { name ? "pandoc", filters ? [ ], extraPackages ? [ ], pythonExtra ? (_: [ ]) }:
           let
             pythonDefault = packages: [ packages.ipython packages.pandocfilters packages.pygraphviz ];
@@ -49,7 +49,8 @@
               --prefix PATH : "${lib.makeBinPath buildInputs}"
           '';
 
-        latex = latexWithExtraPackages { };
+        latex = pkgs.makeOverridable latexWithExtraPackages { };
+        pandoc = pkgs.makeOverridable pandocWithFilters { };
       in
       {
         lib = {
@@ -57,7 +58,7 @@
         };
 
         packages = {
-          inherit latex pandocWithFilters;
+          inherit latex pandoc;
         };
 
         devShell = pkgs.mkShell {
