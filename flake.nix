@@ -9,7 +9,7 @@
         pkgs = nixpkgs.legacyPackages.${system};
 
 
-        latexWithExtraPackages = with pkgs; { makeOverridable ? {} }: texlive.combine ({
+        latexWithExtraPackages = with pkgs; { extraPackages ? {} }: texlive.combine ({
           inherit (pkgs.texlive) scheme-small
             collection-langgerman
             collection-latexextra
