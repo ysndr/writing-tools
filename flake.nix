@@ -22,7 +22,7 @@
 
 
         pandocWithFilters = with pkgs;
-          { name ? "pandoc", filters ? [ ], extraPackages ? [ ], pythonExtra ? (_: [ ]) }:
+          { name ? "pandoc", citeproc ? false, filters ? [ ], extraPackages ? [ ], pythonExtra ? (_: [ ]) }:
           let
             pythonDefault = packages: [ packages.ipython packages.pandocfilters packages.pygraphviz ];
             python = python3.withPackages (p: (pythonDefault p) ++ (pythonExtra p));
@@ -45,6 +45,7 @@
 
               makeWrapper ${pkgs.pandoc}/bin/pandoc $out/bin/pandoc \
                 ${ lib.concatMapStringsSep " " (filter: "--add-flags \"-F ${filter}\"") filters} \
+                ${ if citeproc then  "--add-flags \"--citeproc\"" else  ""} \
                 --prefix PATH : "${lib.makeBinPath buildInputs}"
             '';
 
