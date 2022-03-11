@@ -22,13 +22,13 @@
 
 
         pandocWithFilters = with pkgs;
-          { name ? "pandoc", citeproc ? false, filters ? [ ], extraPackages ? [ ], pythonExtra ? (_: [ ]) }:
+          { name ? "pandoc", citeproc ? false, filters ? [ ], extraPackages ? [ ], pythonExtra ? (_: [ ]), latex ? null }:
           let
             pythonDefault = packages: [ packages.ipython packages.pandocfilters packages.pygraphviz ];
             python = python3.withPackages (p: (pythonDefault p) ++ (pythonExtra p));
             pandocPackages = [
               librsvg
-            ];
+            ] ++ pkgs.lib.optional (latex != null) latex;
             buildInputs = [ makeWrapper python ] ++ pandocPackages ++ extraPackages;
 
           in
