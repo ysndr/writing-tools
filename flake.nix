@@ -12,7 +12,6 @@
         latexWithExtraPackages = with pkgs; { extraPackages ? {} }: texlive.combine ({
           inherit (pkgs.texlive) scheme-small
             collection-langgerman
-            collection-latexextra
             collection-mathscience
             quattrocento
             tracklang;
