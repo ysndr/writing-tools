@@ -62,7 +62,7 @@
 
         devShell = pkgs.mkShell {
           nativeBuildInputs = [ pkgs.bashInteractive ];
-          buildInputs = [ latex pandocWithFilters ];
+          buildInputs = [ latex pandoc ];
         };
       });
 }
